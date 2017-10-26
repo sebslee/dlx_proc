@@ -16,20 +16,20 @@ package dlx_global_pkg;
    
    `define DLX_WORD_SIZE 32
    `define DLX_ADDR_SIZE 32
-   typedef dlx_word logic [`DLX_WORD_SIZE-1 : 0];   
-   typedef dlx_addr logic [`DLX_ADDR_SIZE-1 : 0];
-   typedef dlx_arith_word [`DLX_WORD_SIZE : 0];
+   typedef logic [`DLX_WORD_SIZE-1 : 0] dlx_word ;   
+   typedef logic [`DLX_ADDR_SIZE-1 : 0] dlx_addr ;
+   typedef logic [`DLX_WORD_SIZE : 0] dlx_arith_word;
 
-   typedef opcode logic [5 : 0];
-   typedef spfunc logic [5 : 0];
-   typedef fpfunc logic [4 : 0];
-   typedef regadr logic [4 : 0];
-   typedef imm16 logic [15 :0];
-   typedef imm26 logic [25: 0];
-   typedef imm17 logic [16: 0];
+   typedef  logic [5 : 0] opcode;
+   typedef  logic [5 : 0] spfunc;
+   typedef  logic [4 : 0] fpfunc;
+   typedef  logic [4 : 0] regadr;
+   typedef  logic [15 :0] imm16;
+   typedef  logic [25: 0] imm26;
+   typedef  logic [16: 0] imm17;
 
-   typedef alu_func logic [3 : 0];
-   typedef mem_width logic [1 : 0];
+   typedef  logic [3 : 0] alu_func;
+   typedef  logic [1 : 0] mem_width;
 
    typedef enum { NOFORW , LOAD , STORE , RR_ALU , IM_ALU , BRANCH , MOVEI2S , MOVES2I } opcode_class;
 
@@ -57,9 +57,9 @@ package dlx_global_pkg;
    `define bw_dc_tag 7
    `define bw_cacheline 128
 
-endpackage; // dlx_global_pkg
+endpackage // dlx_global_pkg
    
-  
+`endif
 
    
 
