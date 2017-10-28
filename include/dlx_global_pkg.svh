@@ -20,6 +20,7 @@ package dlx_global_pkg;
    typedef logic unsigned  [`DLX_WORD_SIZE-1 : 0] dlx_word_us;  
    typedef logic [`DLX_ADDR_SIZE-1 : 0] dlx_addr ;
    typedef logic [`DLX_WORD_SIZE : 0] dlx_arith_word;
+   typedef logic [5:0] reg_adr;
 
    typedef  logic [5 : 0] opcode;
    typedef  logic [5 : 0] spfunc;

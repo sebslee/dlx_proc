@@ -13,7 +13,9 @@
 `ifndef DLX_PIPE_ID
  `define DLX_PIPE_ID
 
- `include "../src/dlx_globals.svh"
+ `include "../include/dlx_global_pkg.svh"
+
+import dlx_global_pkg::*;
 
 module dlx_pipe_id(
 		   input logic clk,
@@ -21,7 +23,7 @@ module dlx_pipe_id(
 		   input logic stall,
 		   input logic dc_wait,
 		   //NPC & IR from IF
-		   input dlx_global_pkg::dlx_word if_id_npc,
+		   input dlx_word if_id_npc,
 		   input dlx_global_pkg::dlx_word if_id_ir,
 		   //Data from register file
 		   input dlx_global_pkg::dlx_word id_a,
