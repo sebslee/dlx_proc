@@ -14,23 +14,25 @@
 
 `include "../include/dlx_global_pkg.svh"
 
+import dlx_global_pkg::*;
+
 module dlx_pipe_if (
 		    input logic clk,
 		    input logic rst,
 		    input logic stall,
 		    input logic dc_wait,
-		    input dlx_global_pkg::dlx_word_us id_npc,
+		    input dlx_word_us id_npc,
 		    input logic id_cond,		    
-		    input  dlx_global_pkg::dlx_word ic_data,
-		    output dlx_global_pkg::dlx_addr ic_addr,
-		    output dlx_global_pkg::dlx_word if_id_ir ,
-		    output dlx_global_pkg::dlx_word_us if_id_npc
+		    input  dlx_word ic_data,
+		    output dlx_addr ic_addr,
+		    output dlx_word if_id_ir ,
+		    output dlx_word_us if_id_npc
 		    );
 
    //Internal signals
    
-   dlx_global_pkg::dlx_word_us pc; //program counter
-   dlx_global_pkg::dlx_word_us npc;
+   dlx_word_us pc; //program counter
+   dlx_word_us npc;
          
    always_comb begin: if_comb
       ic_addr = pc;
