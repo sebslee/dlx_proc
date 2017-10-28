@@ -17,7 +17,7 @@ package dlx_global_pkg;
    `define DLX_WORD_SIZE 32
    `define DLX_ADDR_SIZE 32
    typedef logic [`DLX_WORD_SIZE-1 : 0] dlx_word ; 
-   typedef logic [`DLX_WORD_SIZE-1 : 0] unsigned dlx_word_us;  
+   typedef logic unsigned  [`DLX_WORD_SIZE-1 : 0] dlx_word_us;  
    typedef logic [`DLX_ADDR_SIZE-1 : 0] dlx_addr ;
    typedef logic [`DLX_WORD_SIZE : 0] dlx_arith_word;
 
