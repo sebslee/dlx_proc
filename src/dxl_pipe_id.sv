@@ -14,8 +14,10 @@
  `define DLX_PIPE_ID
 
  `include "../include/dlx_global_pkg.svh"
+ `include "../include/dlx_opcode_package.svh"
 
 import dlx_global_pkg::*;
+import dlx_opcode_package::*;
 
 module dlx_pipe_id(
 		   input logic clk,
@@ -109,94 +111,95 @@ module dlx_pipe_id(
       imm26 = {{6{if_id_ir_imm26[25]}},if_id_ir_imm26[25]};
 
       //Trap
-      if(if_id_ir_opcode == op_trap)
+      if(if_id_ir_opcode == `op_trap)
 	id_halt = 1'b1;
       else
 	id_halt = 1'b0;
       //Branch and jump logic
       //Set id_cond if jump instruction or branch and condition satisfied
-      if( (if_id_ir_opcode == op_j || if_id_ir_opcode == op_jal || if_id_ir_opcode == op_jalr || if_id_ir_opcode == op_jr) || (if_id_ir_opcode == op_beqz && id_a_fwd == '0) || (if_id_ir_opcode == op_bnez && id_a_fwd != '0))
+      if( (if_id_ir_opcode == `op_j || if_id_ir_opcode == `op_jal || if_id_ir_opcode == `op_jalr || if_id_ir_opcode == `op_jr) || (if_id_ir_opcode == `op_beqz && id_a_fwd == '0) || (if_id_ir_opcode == `op_bnez && id_a_fwd != '0))
 	id_cond = 1'b1;
       else
 	id_cond = 1'b0;
    //Next address calculation logic
-     if( if_id_ir_opcode == op_jr || if_id_ir_opcode == op_jal)
-       id_npc = if_id_npc + imm_26;
-     else if (if_id_ir_opcode == op_jr || if_id_ir_opcode == op_jalr)
+     if( if_id_ir_opcode == `op_jr || if_id_ir_opcode == `op_jal)
+       id_npc = if_id_npc + imm26;
+     else if (if_id_ir_opcode == `op_jr || if_id_ir_opcode == `op_jalr)
        id_npc = id_a_fwd;
-     else if (if_id_Ir_opcode == op_beqz || if_id_ir_opcode == op_bnez)
+     else if (if_id_ir_opcode == `op_beqz || if_id_ir_opcode == `op_bnez)
        id_npc = if_id_npc + imm16;
 
       //Opcode class decode
-      case (if_id_ir_opcode) begin
-	 op_special:
-	   if( if_id_ir_spfunc == sp_nop)
+      case (if_id_ir_opcode) 
+	 `op_special:
+	   if( if_id_ir_spfunc == `sp_nop)
 	     id_opcode_class_int = NOFORW;
 	   else
 	     id_opcode_class_int = RR_ALU;
-	 op_addi :
+	 `op_addi :
 	   id_opcode_class_int = IM_ALU;
-	 op_addui:
+	 `op_addui:
 	   id_opcode_class_int = IM_ALU;
-	 op_andi :
+	 `op_andi :
 	   id_opcode_class_int = IM_ALU;
-	 op_beq:
+	 `op_beqz:
 	   id_opcode_class_int = BRANCH;
-	 op_bnez:
+	 `op_bnez:
 	   id_opcode_class_int = BRANCH;
-	 op_jalr:
+	 `op_jalr:
 	   id_opcode_class_int = BRANCH;
-	 op_jr:
+	 `op_jr:
 	   id_opcode_class_int = BRANCH;
-	 op_lb:
+	 `op_lb:
 	   id_opcode_class_int = LOAD;
-	 op_lbu:
+	 `op_lbu:
 	   id_opcode_class_int = LOAD;
-	 op_lh :
+	 `op_lh :
 	   id_opcode_class_int = LOAD;
-	 op_lhi:
+	 `op_lhi:
 	   id_opcode_class_int = IM_ALU;
-	 op_lhu:
+	 `op_lhu:
 	   id_opcode_class_int = LOAD;
-	 op_lw :
+	 `op_lw :
 	   id_opcode_class_int = LOAD;
-	 op_ori:
+	 `op_ori:
 	   id_opcode_class_int = IM_ALU;
-	 op_seqi:
+	 `op_seqi:
 	   id_opcode_class_int = IM_ALU;
-	 op_sgei:
+	 `op_sgei:
 	   id_opcode_class_int = IM_ALU;
-	 op_sgti:
+	 `op_sgti:
 	   id_opcode_class_int = IM_ALU;
-	 op_sh :
+	 `op_sh :
 	   id_opcode_class_int = STORE;
-	 op_slei:
+	 `op_slei:
 	   id_opcode_class_int = IM_ALU;
-	 op_slli:
+	 `op_slli:
 	   id_opcode_class_int = IM_ALU;
-	 op_slti:
+	 `op_slti:
 	   id_opcode_class_int = IM_ALU;
-	 op_snei:
+	 `op_snei:
 	   id_opcode_class_int = IM_ALU;
-	 op_srai:
+	 `op_srai:
 	   id_opcode_class_int = IM_ALU;
-	 op_srli:
+	 `op_srli:
 	   id_opcode_class_int = IM_ALU;
-	 op_subi:
+	 `op_subi:
 	   id_opcode_class_int = IM_ALU;
-	 op_sw:
+	 `op_sw:
 	   id_opcode_class_int = STORE;
-	 op_sb:
+	 `op_sb:
 	   id_opcode_class_int = STORE;
-	 op_xori:
+	 `op_xori:
 	   id_opcode_class_int = IM_ALU;
-	 op_j:
+	 `op_j:
 	   id_opcode_class_int = NOFORW;
-	 op_jal:
+	 `op_jal:
 	   id_opcode_class_int = NOFORW;
-	 default:
+	 default: begin
 	   id_opcode_class_int = NOFORW;
-	   id_illegal_instr = 1'b1;
+	   id_illegal_instr    = 1'b1;
+           end
       endcase // case (if_id_ir_opcode)
             	 	 	 	 	 	 	                  
    end: id_comb
