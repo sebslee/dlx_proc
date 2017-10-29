@@ -207,7 +207,7 @@ module dlx_pipe_id(
    always_ff @(posedge clk) begin : id_seq
       if(rst == 1'b1) begin
 	 iar <= '0;
-	 id_ex_mem_wen <='0;
+	 id_ex_dm_wen <='0;
 	 id_ex_dm_en <= '0;
 	 id_ex_reg_wen <= '0;
 	 id_ex_a <= '0;
@@ -221,14 +221,14 @@ module dlx_pipe_id(
 	    id_ex_a            <= id_a;
             id_ex_b            <= id_b;
             id_ex_imm          <= {if_id_ir_imm16[15] , if_id_ir_imm16};	   
-            id_ex_alu_opb_sel  <= SEL_ID_EX_B;
-            id_ex_us_sel       <= SEL_SIGNED;
-            id_ex_data_sel     <= SEL_ALU_OUT;
-            id_ex_alu_func     <= alu_add;
-            id_ex_dm_width     <= MEM_WIDTH_WORD;
+            id_ex_alu_opb_sel  <= `SEL_ID_EX_B;
+            id_ex_us_sel       <= `SEL_SIGNED;
+            id_ex_data_sel     <= `SEL_ALU_OUT;
+            id_ex_alu_func     <= `alu_add;
+            id_ex_dm_width     <= `MEM_WIDTH_WORD;
             id_ex_dm_wen       <= '0;
             id_ex_dm_en        <= '0;
-            id_ex_reg_rd       <= REG_0;	   
+            id_ex_reg_rd       <= `REG_0;	   
             id_ex_reg_wen      <= '0;	   
             id_ex_ir_rs1       <= if_id_ir_rs1;	   
             id_ex_ir_rs2       <= if_id_ir_rs2;       
@@ -255,7 +255,7 @@ module dlx_pipe_id(
 		 id_ex_alu_func <= `alu_xor;
 	       else if(if_id_ir_opcode == `op_lhi) begin 
 		  id_ex_a <= { if_id_ir_imm16 ,  '0};
-		  id_ex_alu_func <= alu_a;
+		  id_ex_alu_func <= `alu_a;
 	       end
 	       else if((if_id_ir_opcode == `op_special && if_id_ir_spfunc == `sp_sll) || if_id_ir_opcode == `op_slli)
 		 id_ex_alu_func <= `alu_sll;
@@ -283,14 +283,14 @@ module dlx_pipe_id(
 		 id_ex_alu_opb_sel <= `SEL_ID_EX_IMM;
 	       
 	       //Memory enable/write logic generation
-	       if(if_id_ir_opcode = `op_lb || if_id_ir_opcode = `op_lbu ||
-		  if_id_ir_opcode = `op_lh || 
-		  if_id_ir_opcode = `op_lhu || if_id_ir_opcode = `op_lw)
+	       if(if_id_ir_opcode == `op_lb || if_id_ir_opcode == `op_lbu ||
+		  if_id_ir_opcode == `op_lh || 
+		  if_id_ir_opcode == `op_lhu || if_id_ir_opcode == `op_lw)
 		 begin
 		    id_ex_dm_en  <= 1'b1;
 		    id_ex_dm_wen <= 1'b0;
 		 end      
-	       else if (if_id_ir_opcode = `op_sb || if_id_ir_opcode = `op_sh || if_id_ir_opcode = `op_sw)
+	       else if (if_id_ir_opcode == `op_sb || if_id_ir_opcode == `op_sh || if_id_ir_opcode == `op_sw)
 		 begin
 		    id_ex_dm_en  <= 1'b1;
 		    id_ex_dm_wen <= 1'b1;
@@ -324,18 +324,18 @@ module dlx_pipe_id(
 	       endcase // case (if_id_ir_opcode)
 
                //Signed or unsigned operation selector
-	       if(if_id_ir_spfunc = `sp_add || if_id_ir_spfunc = `sp_sub ||
-		  if_id_ir_opcode = `op_addi || if_id_ir_opcode = `op_subi ||
-		  if_id_ir_opcode =  `op_lb ||   if_id_ir_opcode = `op_lh  ||  if_id_ir_opcode = `op_lw ) 
+	       if(if_id_ir_spfunc == `sp_add || if_id_ir_spfunc == `sp_sub ||
+		  if_id_ir_opcode == `op_addi || if_id_ir_opcode == `op_subi ||
+		  if_id_ir_opcode ==  `op_lb ||   if_id_ir_opcode == `op_lh  ||  if_id_ir_opcode == `op_lw ) 
 		 id_ex_us_sel <= `SEL_SIGNED;
 	       else
 		 id_ex_us_sel <=  `SEL_UNSIGNED;
 
                //Target register write data select (ALU or MEMORY)
 	       if(if_id_ir_opcode == `op_lw ||  if_id_ir_opcode == `op_lb || if_id_ir_opcode == `op_lh || if_id_ir_opcode == `op_lbu || if_id_ir_opcode == `op_lhu ) 
-		 id_ex_data_sel <= SEL_DM_OUT;
+		 id_ex_data_sel <= `SEL_DM_OUT;
 	       else
-		 id_ex_data_sel <= SEL_ALU_OUT;
+		 id_ex_data_sel <= `SEL_ALU_OUT;
 
 	       if (if_id_ir_opcode == `op_special) 
 		 id_ex_reg_rd <= if_id_ir_rd_rtype;
@@ -346,7 +346,7 @@ module dlx_pipe_id(
 	       if (if_id_ir_opcode == `op_j || if_id_ir_opcode == `op_jr ||
 		   if_id_ir_opcode == `op_jal ||  if_id_ir_opcode == `op_jalr ||
 		   if_id_ir_opcode == `op_beqz || if_id_ir_opcode == `op_bnez ||
-		   (if_id_ir_opcode == `op_special && if_id_ir_spfunc == sp_nop)
+		   (if_id_ir_opcode == `op_special && if_id_ir_spfunc == `sp_nop)
 		   || if_id_ir_opcode == `op_sw ||  if_id_ir_opcode == `op_sh ||
 		   if_id_ir_opcode == `op_sb ||  if_id_ir_opcode == `op_trap) 
 		 id_ex_reg_wen <= 1'b0;
