@@ -12,9 +12,10 @@
 
 `ifndef DLX_PIPE_ID
  `define DLX_PIPE_ID
-
- `include "../include/dlx_global_pkg.svh"
- `include "../include/dlx_opcode_package.svh"
+`include "/home/sleebarr/HDL_PROJECTS/dlx_proc/include/dlx_opcode_package.svh"
+`include "/home/sleebarr/HDL_PROJECTS/dlx_proc/include/dlx_global_pkg.svh"
+ //`include "../include/dlx_global_pkg.svh"
+//`include "~/HDL_PROJECTS/dlx_proc/include/dlx_opcode_package.svh"
 
 import dlx_global_pkg::*;
 import dlx_opcode_package::*;
@@ -105,10 +106,10 @@ module dlx_pipe_id(
       id_illegal_instr = '0;
       id_halt = '0;
       id_npc = 'x;
-
+      
       //Address calculation + sign extension
       imm16 = {{16{if_id_ir_imm16[15]}},if_id_ir_imm16[15:0]};
-      imm26 = {{6{if_id_ir_imm26[25]}},if_id_ir_imm26[25]};
+      imm26 = {{6{if_id_ir_imm26[25]}},if_id_ir_imm26[25:0]};
 
       //Trap
       if(if_id_ir_opcode == `op_trap)

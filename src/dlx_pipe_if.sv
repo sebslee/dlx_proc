@@ -36,29 +36,29 @@ module dlx_pipe_if (
          
    always_comb begin: if_comb
       ic_addr = pc;
+      if(id_cond == 1'b0)begin
+	 npc = pc + 4; 
+      end
+      else if (id_cond == 1'b1)begin
+	 npc = id_npc;
+      end
+      else begin
+	 npc = 'x; // default x propagation
+      end      
    end
 
    always_ff @ (posedge clk , posedge rst ) begin : if_seq      
       if(rst == 1'b1) begin
-	 pc <= '0;
-	 if_id_ir <= '0;	 
+	 pc       <= '0;
+	 if_id_ir <= '0; //reference implementation "0x0000003f, first instruction exectude, is it a NOP ?"	 
       end
       else begin
 	 //Instruction cache miss, if and id stalled for branch instrunctions
 	 //Rest of pipe can continue and resolver data dependencies
 	 if(dc_wait == 1'b0 && stall == 1'b0)begin
-	    if_id_ir <= ic_data;
-	    if(id_cond == 1'b0)begin
-	       npc = pc + 4; 
-            end
-	    else if (id_cond == 1'b1)begin
-		    npc = id_npc;
-            end
-	    else begin
-	       npc <= 'x; // default x propagation
-            end
+	    if_id_ir  <= ic_data;
             if_id_npc <= npc;
-            pc <= npc;  
+            pc        <= npc;  
         end
       end
    end : if_seq
